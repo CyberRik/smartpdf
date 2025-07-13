@@ -3,6 +3,11 @@ from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.llms import huggingface_hub
 from langchain.chains import retrieval_qa
 
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 def answer_question_from_faiss(question: str, db_path: str = "vectorstores/index") -> str:
     embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
     db = FAISS.load_local(db_path, embeddings)
