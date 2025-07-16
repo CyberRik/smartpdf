@@ -1,10 +1,21 @@
 from fastapi import FastAPI, File, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 from pathlib import Path
 from utils.pdf_reader import extract_text_from_pdf
 from rag.ingest import ingest_text_to_faiss
 from rag.query import answer_question_from_faiss
 
 app = FastAPI()
+
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],  
+    allow_headers=["*"], 
+)
 
 @app.get("/")
 def read_item():

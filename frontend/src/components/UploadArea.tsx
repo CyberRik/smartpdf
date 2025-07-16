@@ -1,0 +1,166 @@
+'use client';
+
+import { useState, useRef, useCallback } from 'react';
+import { Upload, FileText, AlertCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+
+type Props = {
+  setFile: (file: File) => void;
+  setSummary: (summary: string) => void; 
+};
+
+const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
+
+export default function UploadArea({ setFile, setSummary }: Props) {
+  const [uploading, setUploading] = useState(false);
+  const [dragActive, setDragActive] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const validateFile = (file: File): string | null => {
+    if (file.type !== 'application/pdf') {
+      return 'Please select a PDF file';
+    }
+    if (file.size > MAX_FILE_SIZE) {
+      return `File size must be less than ${MAX_FILE_SIZE / (1024 * 1024)}MB`;
+    }
+    return null;
+  };
+
+  const handleFile = async (file: File) => {
+    const validationError = validateFile(file);
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
+    setError(null);
+    setFile(file);
+    setUploading(true);
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await fetch("http://localhost:8000/Uploads", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        throw new Error(`Upload failed: ${res.statusText}`);
+      }
+
+      const data = await res.json();
+      setSummary(data.summary);
+    } catch (err) {
+      console.error("Upload failed:", err);
+      setError(err instanceof Error ? err.message : "Upload failed. Please try again.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    if (selectedFile) {
+      handleFile(selectedFile);
+    }
+  };
+
+  const handleDrag = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  }, []);
+
+  const handleDragIn = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
+      setDragActive(true);
+    }
+  }, []);
+
+  const handleDragOut = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+  }, []);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const droppedFile = e.dataTransfer.files[0];
+      handleFile(droppedFile);
+      e.dataTransfer.clearData();
+    }
+  }, []);
+
+  const openFileDialog = () => {
+    fileInputRef.current?.click();
+  };
+
+  return (
+    <div className="space-y-4 animate-fade-in">
+      <div
+        className={`upload-zone ${dragActive ? 'upload-zone-active' : ''}`}
+        onDragEnter={handleDragIn}
+        onDragLeave={handleDragOut}
+        onDragOver={handleDrag}
+        onDrop={handleDrop}
+        onClick={openFileDialog}
+      >
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="application/pdf"
+          onChange={handleFileChange}
+          className="hidden"
+        />
+
+        <div className="flex flex-col items-center space-y-4">
+          {uploading ? (
+            <div className="animate-pulse">
+              <FileText className="h-12 w-12 text-primary" />
+            </div>
+          ) : (
+            <Upload className="h-12 w-12 text-muted-foreground" />
+          )}
+
+          <div className="text-center">
+            <h3 className="text-lg font-semibold text-foreground">
+              {uploading ? 'Processing PDF...' : 'Upload PDF File'}
+            </h3>
+            <p className="text-sm text-muted-foreground mt-1">
+              {uploading 
+                ? 'Analyzing document and generating summary...' 
+                : 'Drag and drop your PDF here, or click to browse'
+              }
+            </p>
+          </div>
+
+          {!uploading && (
+            <Button variant="secondary" className="pointer-events-none">
+              Choose File
+            </Button>
+          )}
+
+          <div className="text-xs text-muted-foreground">
+            Maximum file size: 100MB
+          </div>
+        </div>
+      </div>
+
+      {error && (
+        <Alert variant="destructive" className="animate-slide-up">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+    </div>
+  );
+}
