@@ -1,12 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { FileText, MessageSquare } from 'lucide-react';
+import { FileText, MessageSquare, Sparkles } from 'lucide-react';
 import UploadArea from '../components/UploadArea';
 import PDFPreview from '../components/PDFPreview';
 import SummaryBox from '../components/SummaryBox';
 import ChatBox, { Message } from '../components/ChatBox';
 import ChatInput from '../components/ChatInput';
+import { Toaster } from '../components/ui/toaster';
 
 export default function Index() {
   const [file, setFile] = useState<File | null>(null);
@@ -75,15 +76,28 @@ export default function Index() {
       {/* Header */}
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10">
         <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center space-x-3">
-            <div className="p-2 bg-primary rounded-lg">
-              <FileText className="h-6 w-6 text-primary-foreground" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="relative p-2 bg-gradient-to-br from-primary to-primary-hover rounded-lg">
+                <FileText className="h-6 w-6 text-primary-foreground" />
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-success rounded-full animate-pulse-slow" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-foreground flex items-center space-x-2">
+                  <span>PDF Summarizer</span>
+                  <Sparkles className="h-5 w-5 text-primary" />
+                </h1>
+                <p className="text-sm text-muted-foreground">
+                  Upload, analyze, and chat with your PDF documents using AI
+                </p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">PDF Summarizer</h1>
-              <p className="text-sm text-muted-foreground">
-                Upload, analyze, and chat with your PDF documents
-              </p>
+            
+            <div className="hidden md:flex items-center space-x-4 text-xs text-muted-foreground">
+              <div className="flex items-center space-x-1">
+                <div className="w-2 h-2 bg-success rounded-full" />
+                <span>Ready</span>
+              </div>
             </div>
           </div>
         </div>
@@ -112,7 +126,7 @@ export default function Index() {
                   </h2>
                 </div>
                 
-                <ChatBox messages={messages} />
+                <ChatBox messages={messages} isLoading={isLoadingChat} />
                 <ChatInput 
                   onAsk={handleAsk} 
                   isLoading={isLoadingChat}
@@ -122,19 +136,40 @@ export default function Index() {
             )}
 
             {!hasSummary && !file && (
-              <div className="summary-card p-12 text-center">
-                <div className="flex flex-col items-center space-y-4">
-                  <div className="p-4 bg-accent rounded-full">
-                    <FileText className="h-8 w-8 text-accent-foreground" />
+              <div className="summary-card p-12 text-center hover-lift">
+                <div className="flex flex-col items-center space-y-6">
+                  <div className="relative">
+                    <div className="p-6 bg-gradient-to-br from-primary/10 to-primary/20 rounded-2xl">
+                      <FileText className="h-12 w-12 text-primary" />
+                    </div>
+                    <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-br from-warning to-warning/80 rounded-full flex items-center justify-center">
+                      <Sparkles className="h-3 w-3 text-warning-foreground" />
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-foreground mb-2">
-                      Welcome to PDF Summarizer
+                  
+                  <div className="space-y-3">
+                    <h3 className="text-2xl font-bold text-foreground">
+                      Welcome to AI PDF Summarizer
                     </h3>
-                    <p className="text-muted-foreground max-w-md">
-                      Upload a PDF document to get started. I'll analyze the content, 
-                      provide a comprehensive summary, and answer any questions you have.
+                    <p className="text-muted-foreground max-w-lg leading-relaxed">
+                      Transform your PDF documents into concise summaries and interactive conversations. 
+                      Upload any PDF to get started with intelligent analysis powered by AI.
                     </p>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-lg text-sm">
+                    <div className="text-center p-3 rounded-lg bg-accent/30">
+                      <div className="font-medium text-foreground mb-1">📄 Upload</div>
+                      <div className="text-muted-foreground">Any PDF up to 100MB</div>
+                    </div>
+                    <div className="text-center p-3 rounded-lg bg-accent/30">
+                      <div className="font-medium text-foreground mb-1">🤖 Analyze</div>
+                      <div className="text-muted-foreground">AI-powered insights</div>
+                    </div>
+                    <div className="text-center p-3 rounded-lg bg-accent/30">
+                      <div className="font-medium text-foreground mb-1">💬 Chat</div>
+                      <div className="text-muted-foreground">Ask questions</div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -142,6 +177,22 @@ export default function Index() {
           </div>
         </div>
       </main>
+      
+      {/* Footer */}
+      <footer className="border-t border-border bg-card/30 mt-auto">
+        <div className="container mx-auto px-6 py-4">
+          <div className="flex items-center justify-between text-sm text-muted-foreground">
+            <div>
+              Powered by AI • Built with React & FastAPI
+            </div>
+            <div className="flex items-center space-x-4">
+              <span>v1.0.0</span>
+            </div>
+          </div>
+        </div>
+      </footer>
+      
+      <Toaster />
     </div>
   );
 }

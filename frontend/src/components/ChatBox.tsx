@@ -2,6 +2,7 @@
 
 import { MessageCircle, Bot, User } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import TypingIndicator from './TypingIndicator';
 
 export type Message = {
   id: string;
@@ -12,9 +13,10 @@ export type Message = {
 
 type Props = {
   messages: Message[];
+  isLoading?: boolean;
 };
 
-export default function ChatBox({ messages }: Props) {
+export default function ChatBox({ messages, isLoading = false }: Props) {
   if (messages.length === 0) {
     return (
       <div className="summary-card p-8 text-center animate-fade-in">
@@ -80,6 +82,8 @@ export default function ChatBox({ messages }: Props) {
               </div>
             </div>
           ))}
+          
+          {isLoading && <TypingIndicator />}
         </div>
       </ScrollArea>
     </div>
