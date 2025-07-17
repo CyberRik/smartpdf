@@ -45,7 +45,7 @@ export default function ChatInput({ onAsk, isLoading = false, disabled = false }
               : "Ask a question about the PDF content..."
           }
           disabled={disabled || isLoading}
-          className="min-h-[80px] resize-none border-0 p-0 focus:ring-0 focus:border-0"
+          className="min-h-[80px] resize-none border-0 p-3 focus:ring-0 focus:border-0"
         />
         
         <div className="flex items-center justify-between">
