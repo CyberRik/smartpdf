@@ -1,3 +1,6 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 from utils.pdf_reader import extract_text_from_pdf
 from langchain.llms import huggingface_hub
 
