@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
 from pathlib import Path
 from rag.query import answer_question_from_faiss
@@ -55,8 +55,30 @@ def get_summary(filename: str):
 
 @app.get("/ask")
 def ask_question(q: str):
-    answer = answer_question_from_faiss(q, db_path="vectorstores/index")
-    return {"question": q, "answer": answer}
+    """Legacy simple ask endpoint using query parameter `q`."""
+    try:
+        answer = answer_question_from_faiss(q, db_path="vectorstores/index")
+        return {"question": q, "answer": answer}
+    except Exception as e:
+        return {"error": f"Query failed: {str(e)}"}
+
+@app.post("/chat")
+async def chat_with_pdf(
+    question: str = Form(...),
+    file: UploadFile = File(None),
+):
+    """Chat endpoint used by the React frontend (multipart/form-data).
+    Currently the PDF `file` is optional because the vectorstore is already
+    built during ingestion; only the `question` string is required.
+    """
+    if not question:
+        return {"error": "Question is required"}
+
+    try:
+        answer = answer_question_from_faiss(question, db_path="vectorstores/index")
+        return {"question": question, "answer": answer}
+    except Exception as e:
+        return {"error": f"Chat query failed: {str(e)}"}
 
 def cleanup_uploads():
     import os, time
