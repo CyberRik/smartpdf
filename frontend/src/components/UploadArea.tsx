@@ -77,8 +77,18 @@ export default function UploadArea({ setFile, setSummary }: Props) {
 
       const data = await res.json();
       setProgress(100);
+
+      // Fetch summary after upload
+      try {
+        const summaryRes = await fetch(`http://localhost:8000/summarize?filename=${file.name}`);
+        const summaryData = await summaryRes.json();
+        setSummary(summaryData.summary || "");
+      } catch (summaryErr) {
+        console.error("Summary fetch failed:", summaryErr);
+        setSummary("");
+      }
+
       setTimeout(() => {
-        setSummary(data.summary);
         setUploadSuccess(true);
         toast({
           title: "Success!",

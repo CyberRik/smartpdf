@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+gunicorn
+celery[redis]
+redis
+langchain
+sentence-transformers
+transformers
+PyMuPDF
+python-dotenv
+apscheduler
