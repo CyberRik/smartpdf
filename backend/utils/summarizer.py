@@ -43,7 +43,7 @@ def summarize_pdf(pdf_path: str) -> str:
             #     chunk,
             #     max_new_tokens=output_length,
             #     do_sample=False
-            # )[0]['summary_text']
+            # )[0]['summary_text']   #faster but can be inaccurate
             summary = summarizer(
                 chunk,
                 max_length = total_max_length,
