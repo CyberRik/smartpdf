@@ -7,6 +7,7 @@ import PDFPreview from '../components/PDFPreview';
 import SummaryBox from '../components/SummaryBox';
 import ChatBox, { Message } from '../components/ChatBox';
 import ChatInput from '../components/ChatInput';
+import StatusIndicator from '../components/StatusIndicator';
 import { Toaster } from '../components/ui/toaster';
 
 export default function Index() {
@@ -14,6 +15,7 @@ export default function Index() {
   const [summary, setSummary] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoadingChat, setIsLoadingChat] = useState(false);
+  const [processingStatus, setProcessingStatus] = useState<'idle' | 'uploading' | 'processing' | 'ready' | 'error'>('idle');
 
   const handleAsk = async (question: string) => {
     if (!file) return;
@@ -29,10 +31,9 @@ export default function Index() {
     setIsLoadingChat(true);
 
     try {
-      // Make API call to your FastAPI backend for chat
+      // Use form data for the chat request
       const formData = new FormData();
       formData.append("question", question);
-      formData.append("file", file);
 
       const res = await fetch("http://localhost:8000/chat", {
         method: "POST",
@@ -44,6 +45,10 @@ export default function Index() {
       }
 
       const data = await res.json();
+      
+      if (data.error) {
+        throw new Error(data.error);
+      }
       
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -58,7 +63,7 @@ export default function Index() {
       
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: "Sorry, I encountered an error while processing your question. Please try again.",
+        text: error instanceof Error ? error.message : "Sorry, I encountered an error while processing your question. Please try again.",
         isUser: false,
         timestamp: new Date(),
       };
@@ -93,11 +98,11 @@ export default function Index() {
               </div>
             </div>
             
-            <div className="hidden md:flex items-center space-x-4 text-xs text-muted-foreground">
-              <div className="flex items-center space-x-1">
-                <div className="w-2 h-2 bg-success rounded-full" />
-                <span>Ready</span>
-              </div>
+            <div className="hidden md:flex items-center space-x-4">
+              <StatusIndicator 
+                status={processingStatus} 
+                message={processingStatus === 'processing' ? 'Analyzing PDF...' : undefined}
+              />
             </div>
           </div>
         </div>
@@ -109,7 +114,11 @@ export default function Index() {
           
           {/* Left Panel - Upload & Preview */}
           <div className="lg:col-span-1 space-y-6">
-            <UploadArea setFile={setFile} setSummary={setSummary} />
+            <UploadArea 
+              setFile={setFile} 
+              setSummary={setSummary} 
+              setProcessingStatus={setProcessingStatus}
+            />
             <PDFPreview file={file} />
           </div>
 

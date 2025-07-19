@@ -10,11 +10,12 @@ import ProgressBar from './ProgressBar';
 type Props = {
   setFile: (file: File) => void;
   setSummary: (summary: string) => void; 
+  setProcessingStatus?: (status: 'idle' | 'uploading' | 'processing' | 'ready' | 'error') => void;
 };
 
-const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 1MB
 
-export default function UploadArea({ setFile, setSummary }: Props) {
+export default function UploadArea({ setFile, setSummary, setProcessingStatus }: Props) {
   const [uploading, setUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -50,6 +51,7 @@ export default function UploadArea({ setFile, setSummary }: Props) {
     setFile(file);
     setUploading(true);
     setProgress(0);
+    setProcessingStatus?.('uploading');
 
     // Simulate progress for better UX
     const progressInterval = setInterval(() => {
@@ -76,29 +78,65 @@ export default function UploadArea({ setFile, setSummary }: Props) {
       }
 
       const data = await res.json();
-      setProgress(100);
+      setProgress(85);
+      setProcessingStatus?.('processing');
 
-      // Fetch summary after upload
-      try {
-        const summaryRes = await fetch(`http://localhost:8000/summarize?filename=${file.name}`);
-        const summaryData = await summaryRes.json();
-        setSummary(summaryData.summary || "");
-      } catch (summaryErr) {
-        console.error("Summary fetch failed:", summaryErr);
-        setSummary("");
-      }
+      // Poll for summary completion
+      let attempts = 0;
+      const maxAttempts = 30;
+      
+      const pollSummary = async () => {
+        try {
+          const summaryRes = await fetch(`http://localhost:8000/summarize?filename=${file.name}`);
+          const summaryData = await summaryRes.json();
+          
+          if (summaryData.summary && !summaryData.error) {
+            setProgress(100);
+            setSummary(summaryData.summary);
+            setUploadSuccess(true);
+            setProcessingStatus?.('ready');
+            toast({
+              title: "Success!",
+              description: "PDF analyzed and summary generated successfully.",
+            });
+            setUploading(false); // <-- Only here for success
+            return;
+          }
+          
+          if (summaryData.error) {
+            setProcessingStatus?.('error');
+            setUploading(false); // <-- Only here for error
+            throw new Error(summaryData.error);
+          }
+          
+          attempts++;
+          if (attempts < maxAttempts) {
+            setProgress(85 + (attempts * 0.8));
+            setTimeout(pollSummary, 1000);
+          } else {
+            throw new Error("Summary generation timed out");
+          }
+        } catch (summaryErr) {
+          console.error("Summary fetch failed:", summaryErr);
+          setSummary("");
+          setProcessingStatus?.('error');
+          setUploading(false); // <-- Only here for error
+          toast({
+            title: "Warning",
+            description: "Summary generation failed, but you can still chat with the PDF",
+            variant: "destructive",
+          });
+          setUploadSuccess(true);
+        }
+      };
 
-      setTimeout(() => {
-        setUploadSuccess(true);
-        toast({
-          title: "Success!",
-          description: "PDF analyzed and summary generated successfully.",
-        });
-      }, 500);
+      setTimeout(pollSummary, 2000);
     } catch (err) {
       console.error("Upload failed:", err);
       const errorMessage = err instanceof Error ? err.message : "Upload failed. Please try again.";
       setError(errorMessage);
+      setProcessingStatus?.('error');
+      setUploading(false); // <-- Only here for error
       toast({
         title: "Upload failed",
         description: errorMessage,
@@ -106,10 +144,7 @@ export default function UploadArea({ setFile, setSummary }: Props) {
       });
     } finally {
       clearInterval(progressInterval);
-      setTimeout(() => {
-        setUploading(false);
-        setProgress(0);
-      }, 1000);
+      // REMOVE setUploading(false) from finally block!
     }
   };
 
@@ -225,6 +260,7 @@ export default function UploadArea({ setFile, setSummary }: Props) {
                 setUploadSuccess(false);
                 setFile(null);
                 setSummary('');
+                setProcessingStatus?.('idle');
                 if (fileInputRef.current) {
                   fileInputRef.current.value = '';
                 }

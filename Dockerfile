@@ -1,9 +1,11 @@
 FROM python:3.11-slim
 
-WORKDIR /app
+WORKDIR /app/backend
 
-COPY . /app
+COPY ./requirements.txt /app/requirements.txt
 
-RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
+COPY ./backend /app/backend
 
-CMD ["gunicorn", "backend.main:app", "-k", "uvicorn.workers.UvicornWorker", "-w", "4", "-b", "0.0.0.0:8000"]
+RUN pip install --upgrade pip && pip install --no-cache-dir -r /app/requirements.txt
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

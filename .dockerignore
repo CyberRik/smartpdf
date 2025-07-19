@@ -1,6 +1,12 @@
-__pycache__
+__pycache__/
 *.pyc
 *.pyo
-*.pyd
+*.db
+*.sqlite3
+*.log
+*.pdf
 uploads/
+vectorstores/
+node_modules/
 .env
+frontend/
