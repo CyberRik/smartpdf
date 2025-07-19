@@ -7,7 +7,6 @@ from pathlib import Path
 from rag.query import answer_question_from_faiss
 from tasks.background_tasks import ingest_pdf_task
 from utils.summarizer import summarize_pdf
-from langchain.llms import huggingface_hub
 import shutil
 from apscheduler.schedulers.background import BackgroundScheduler
 

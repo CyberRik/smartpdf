@@ -1,0 +1,376 @@
+9.1
+ INTRODUCTION
+The boundary layer of a flowing fluid is the thin layer close to the wall. In a flow field,
+viscous stresses are very prominent within this layer. Although the layer is thin, it is
+very important to know the details of flow within it. The main-flow velocity within this
+layer tends to zero while approaching the wall. Also the gradient of this velocity
+component in a direction normal to the surface is large as  compared to the gradient of
+this component in the streamwise direction.
+9.2
+ BOUNDARY LAYER EQUATIONS
+In 1904, Ludwig Prandtl, the well-known German scientist, introduced the concept of
+boundary layer [1] and derived the equations for boundary layer flow by correct
+reduction of the Navier–Stokes equations. He hypothesised that for fluids having a
+relatively small viscosity, the effect of internal fictitious in the fluid is significant only
+in a narrow region surrounding the solid boundaries or bodies over which the fluid
+flows. Thus, close to the body is the boundary layer where shear stresses exert an
+increasingly larger effect on the fluid as one moves from free stream towards the solid
+boundary. However, outside the boundary layer where the effect of the shear stresses
+on the flow is small compared to values inside the boundary layer (since the velocity
+gradient ∂u/∂y is negligible), the fluid particles experience no vorticity, and therefore,
+the flow is similar to a potential flow. Hence, the surface at the boundary layer
+interface is a rather fictitious one dividing rotational and irrotational flow. Prandtl’s
+model regarding the boundary layer flow is shown in Fig. 9.1. Hence with the
+exception of the immediate vicinity of the surface, the flow is frictionless (inviscid)
+and the velocity is U. In the region very near to the surface (in the thin layer), there is
+friction in the flow which signifies that the fluid is retarded until it adheres to the
+surface. The transition of the mainstream velocity from zero at the surface to full
+magnitude takes place across the boundary layer. Its thickness is d which is a function
+of the coordinate direction x. The thickness is considered to be very small compared
+to the characteristic length L of the domain. In the normal direction, within the thin
+layer, the gradient ∂u/∂y is very large compared to the gradient in the flow direction
+∂u/∂x. The next step is to simplify the Navier–Stokes equations for steady two-
+9
+LAMINAR BOUNDARY LAYERS
+448
+Introduction to Fluid Mechanics and Fluid Machines
+dimensional laminar incompressible flows. Considering the Navier–Stokes equations
+together with the equation of continuity, the following dimensional form is obtained:
+u
+u
+u
+x
+y
+∂
+∂
+∂
+∂
++ v
+ = –
+2
+2
+2
+2
+1
+p
+u
+u
+x
+x
+y
+∂
+m
+∂
+∂
+r ∂
+r
+∂
+∂
+È
+˘
++
++
+Í
+˙
+Î
+˚
+(9.1)
+u
+x
+y
+∂
+∂
+∂
+∂
++
+v
+v
+v
+ = –
+2
+2
+2
+2
+1
+p
+y
+x
+y
+∂
+m
+∂
+∂
+r ∂
+r
+∂
+∂
+È
+˘
++
++
+Í
+˙
+Î
+˚
+v
+v
+(9.2)
+0
+u
+x
+y
+∂
+∂
+∂
+∂
++
+=
+v
+(9.3)
+Potential
+flow
+Free
+stream
+Boundary
+layer
+u x y
+( , )
+x
+U•
+y
+d(x)
+L
+u
+U
+Fig. 9.1 
+Boundary layer on a flat plate
+Here the velocity components u and v are acting along the streamwise x and
+normal y directions respectively. The static pressure is p, while r is the density and m
+is the dynamic viscosity of the fluid.
+The equations are now non-dimensionalised. The length and the velocity scales
+are chosen as L and U• respectively. The non-dimensional variables are
+*
+*
+*
+2
+,
+,
+u
+p
+u
+p
+U
+U
+U
+r
+•
+•
+•
+=
+=
+=
+v
+v
+*x = 
+*
+,
+x
+y
+y
+L
+L
+=
+where U• is the dimensional free stream velocity and the pressure is non-
+dimensionalised by twice the dynamic pressure pd = (1/2) r U2
+•. Using these non-
+dimensional variables,  Eqs (9.1) to (9.3) become
+*
+*
+*
+*
+*
+*
+u
+u
+u
+x
+y
+∂
+∂
+∂
+∂
++ v
+ =
+*
+2
+*
+2
+*
+*
+*2
+*2
+1
+–
+Re
+p
+u
+u
+x
+x
+y
+∂
+∂
+∂
+∂
+∂
+∂
+È
+˘
++
++
+Í
+˙
+Î
+˚
+(9.4)
+*
+*
+*
+*
+*
+*
+u
+x
+y
+∂
+∂
+∂
+∂
++
+v
+v
+v
+ =
+*
+2 *
+2 *
+*
+*2
+*2
+1
+–
+Re
+p
+y
+x
+y
+∂
+∂
+∂
+∂
+∂
+∂
+È
+˘
++
++
+Í
+˙
+Î
+˚
+v
+v
+(9.5)
+Laminar Boundary Layers
+449
+*
+*
+*
+*
+u
+x
+y
+∂
+∂
+∂
+∂
++
+v  = 0
+(9.6)
+where the Reynolds number,
+Re =
+U
+L
+r
+m
+•
+Let us now examine what happens to the u velocity as we go across the boundary
+layer. At the wall the u velocity is zero. The value of u on the inviscid side, i.e., on the
+free stream side beyond the boundary layer. is U. For the case of external flow over a
+flat plate, this U is equal to U•.
+Based on the above, we can identify the following scales for the boundary layer
+variables:
+Variable
+Dimensional scale
+Non-dimensional scale
+u
+U•
+1
+x
+L
+1
+y
+d
+e (=d /L)
+The symbol e describes a value much smaller than 1. Now let us look at the order
+of magnitude of each individual terms involved in Eqs (9.4), (9.5) and (9.6). We start with
+the continuity Eq. (9.6). One general rule of incompressible fluid mechanics is that we
+are not allowed to drop any term from the continuity equation. From the scales of
+boundary layer variables, the derivative ∂u*/∂x* is of the order 1. The second term in
+the continuity equation ∂v*/∂y* should also be of the order 1. Now, what makes ∂v*/
+∂y* to have the order 1? Admittedly v* has to be of the order e because y* becomes e
+(= d/L) at its maximum. Next, consider Eq. (9.4). Inertia terms are of the order 1. Among
+the second order derivatives, ∂2u*/∂x*2 is of the order 1 and ∂2 u*/∂y*2 contains a
+large estimate of (1/e 2). However, after multiplication with 1/Re, the sum of these two
+second order derivatives should produce at least one term which is of the same order
+of magnitude as the inertia terms. This is possible only if the Reynolds number (Re) is
+of the order of 1/e2.
+The order of Reynolds number can be determined in the following manner. While
+deriving the boundary layer equation, the basic assumption is that outside the
+boundary layer, the inertia force is >> viscous force. However, within the boundary
+layer, the inertia force and viscous forces are comparable. If inertia force and the
+viscous force components can be represented by 
+u
+u x
+r ∂
+∂ and 
+2
+2
+u
+y
+m ∂
+∂
+ respectively, we
+can say that within the boundary layer
+2
+2
+~
+u
+u
+u x
+y
+r
+m
+∂
+∂
+∂
+∂
+or
+2
+~
+U
+U
+U L
+r
+m
+d

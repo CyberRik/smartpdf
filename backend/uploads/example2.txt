@@ -1,0 +1,34 @@
+9.1
+ INTRODUCTION
+The boundary layer of a flowing fluid is the thin layer close to the wall. In a flow field,
+viscous stresses are very prominent within this layer. Although the layer is thin, it is
+very important to know the details of flow within it. The main-flow velocity within this
+layer tends to zero while approaching the wall. Also the gradient of this velocity
+component in a direction normal to the surface is large as  compared to the gradient of
+this component in the streamwise direction.
+9.2
+ BOUNDARY LAYER EQUATIONS
+In 1904, Ludwig Prandtl, the well-known German scientist, introduced the concept of
+boundary layer [1] and derived the equations for boundary layer flow by correct
+reduction of the Navier–Stokes equations. He hypothesised that for fluids having a
+relatively small viscosity, the effect of internal fictitious in the fluid is significant only
+in a narrow region surrounding the solid boundaries or bodies over which the fluid
+flows. Thus, close to the body is the boundary layer where shear stresses exert an
+increasingly larger effect on the fluid as one moves from free stream towards the solid
+boundary. However, outside the boundary layer where the effect of the shear stresses
+on the flow is small compared to values inside the boundary layer (since the velocity
+gradient ∂u/∂y is negligible), the fluid particles experience no vorticity, and therefore,
+the flow is similar to a potential flow. Hence, the surface at the boundary layer
+interface is a rather fictitious one dividing rotational and irrotational flow. Prandtl’s
+model regarding the boundary layer flow is shown in Fig. 9.1. Hence with the
+exception of the immediate vicinity of the surface, the flow is frictionless (inviscid)
+and the velocity is U. In the region very near to the surface (in the thin layer), there is
+friction in the flow which signifies that the fluid is retarded until it adheres to the
+surface. The transition of the mainstream velocity from zero at the surface to full
+magnitude takes place across the boundary layer. Its thickness is d which is a function
+of the coordinate direction x. The thickness is considered to be very small compared
+to the characteristic length L of the domain. In the normal direction, within the thin
+layer, the gradient ∂u/∂y is very large compared to the gradient in the flow direction
+∂u/∂x. The next step is to simplify the Navier–Stokes equations for steady two-
+9
+LAMINAR BOUNDARY LAYERS

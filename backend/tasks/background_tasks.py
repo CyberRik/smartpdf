@@ -13,5 +13,8 @@ celery_app = Celery(
 def ingest_pdf_task(file_path: str):
     path = Path(file_path)
     text = extract_text_from_pdf(path)
+    txt_path = path.with_suffix('.txt')
+    with open(txt_path, 'w', encoding='utf-8') as f:
+        f.write(text)
     ingest_text_to_faiss(text, db_path="vectorstores/index")
-    return f"Ingested file: {path.name}"
+    return f"Ingested file: {path.name} and saved text to: {txt_path.name}"

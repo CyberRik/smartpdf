@@ -6,6 +6,7 @@ redis
 langchain
 sentence-transformers
 transformers
+torch
 PyMuPDF
 python-dotenv
 apscheduler
