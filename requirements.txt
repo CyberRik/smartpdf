@@ -4,6 +4,7 @@ gunicorn
 celery[redis]
 redis
 langchain
+langchain-community
 sentence-transformers
 transformers
 torch
