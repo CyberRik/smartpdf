@@ -113,5 +113,5 @@ npm run dev
 
 ## 🙌 Credits
 
-Built with ❤️ by [Your Name or Team Name].
+Built with ❤️ by Ritankar.
 
